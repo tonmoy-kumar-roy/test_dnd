@@ -24,6 +24,7 @@ import TestDNDComponent from "./TestDNDComponent";
 export const InterestDynamicFieldSettings = () => {
   const [fields, setFields] = useState<IDynamicFields[]>([]);
   const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [prevFields, setPrevFields] = useState<IDynamicFields[]>([]);
 
   // const { organizationId } = useParams<{ organizationId: string }>();
 
@@ -54,8 +55,9 @@ export const InterestDynamicFieldSettings = () => {
   // }, [fields, dynamicFieldsData]);
 
   useEffect(() => {
+    setIsDirty(JSON.stringify(fields) !== JSON.stringify(prevFields));
     setIsDirty(!(fields.length <= 0));
-  }, [fields]);
+  }, [fields, prevFields]);
 
   // useEffect(() => {
   //   if (!commandResponse.data) {
@@ -91,13 +93,13 @@ export const InterestDynamicFieldSettings = () => {
 
   const handleSave = () => {
     const hasEmptyFieldName = fields.some((field) => field.Name === "");
-    console.log(hasEmptyFieldName, fields);
     // if (hasEmptyFieldName) {
     //   enqueueSnackbar("Field name cannot be empty", {
     //     variant: "error",
     //   });
     //   return;
     // }
+    console.log(hasEmptyFieldName, fields);
     // setOrganizationInterestDynamicFields(organizationId ?? "", fields);
     // setIsDirty(false);
   };
@@ -171,6 +173,8 @@ export const InterestDynamicFieldSettings = () => {
           fields={fields}
           setFields={setFields}
           handleRemoveField={handleRemoveField}
+          prevFields={prevFields}
+          setPrevFields={setPrevFields}
         ></TestDNDComponent>
 
         <Button

@@ -7,11 +7,15 @@ import { MouseEventHandler } from "react";
 
 const TestDNDComponent = ({
   fields,
+  prevFields,
   setFields,
+  setPrevFields,
   handleRemoveField,
 }: {
   fields: IDynamicFields[];
+  prevFields: IDynamicFields[];
   setFields: React.Dispatch<React.SetStateAction<IDynamicFields[]>>;
+  setPrevFields: React.Dispatch<React.SetStateAction<IDynamicFields[]>>;
   handleRemoveField: (
     x: number
   ) => MouseEventHandler<HTMLAnchorElement> | undefined;
@@ -56,8 +60,12 @@ const TestDNDComponent = ({
   // ]);
 
   const onDragEnd = ({ destination, source }: DropResult) => {
-    // dropped outside the list
-    if (!destination) return;
+    if (prevFields.length === 0) {
+      setPrevFields(fields);
+    }
+    if (!destination)
+      // dropped outside the list
+      return;
 
     const newItems = reorder(fields, source.index, destination.index);
 
