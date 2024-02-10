@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { useState } from "react";
 
 const DraggableListItem = ({
   item,
@@ -19,6 +20,7 @@ const DraggableListItem = ({
   setFields,
   handleRemoveField,
 }: DraggableListItemProps) => {
+  const [itemData, setItemData] = useState(item);
   return (
     <Draggable draggableId={`${item.Name}-${index}`} index={index}>
       {(provided, snapshot) => (
@@ -30,6 +32,8 @@ const DraggableListItem = ({
             backgroundColor: snapshot.isDragging
               ? "hsla(0, 80%, 80%, 0.2)"
               : "inherit",
+            boxShadow: snapshot.isDragging ? "2px 5px 5px gray" : "inherit",
+            borderRadius: "0.2rem",
             ...provided.draggableProps.style,
           }}
         >
@@ -43,8 +47,16 @@ const DraggableListItem = ({
             <TextField
               label={"Field Name"}
               fullWidth
-              value={item.Name}
+              value={itemData?.Name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = e.target.value;
+                setItemData((prevFields) => {
+                  const newFields = { ...prevFields };
+                  newFields.Name = value;
+                  return newFields;
+                });
+              }}
+              onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = e.target.value;
                 setFields((prevFields) => {
                   const newFields = [...prevFields];
